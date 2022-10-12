@@ -58,18 +58,30 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const { name, number } = request.body
 
-    const ids = persons.map(person => person.id)
+    if (name && number) {
 
-    let id = Math.floor(Math.random() * (100 - 1) + 1)
+        const found = persons.find(person => person.name === name)
 
-    while (ids.includes(id)) {
-        id = Math.floor(Math.random() * (100 - 1) + 1)
+        if (found) {
+            response.status(403).end({ error: "name must be unique"})
+        }
+
+        const ids = persons.map(person => person.id)
+
+        let id = Math.floor(Math.random() * (100 - 1) + 1)
+
+        while (ids.includes(id)) {
+            id = Math.floor(Math.random() * (100 - 1) + 1)
+        }
+
+        const person = { id, name, number }
+
+        persons = persons.concat(person)
+
+        response.json(person)
+    } else {
+        response.status(400).end({ error: "name and/or number missing" })
     }
-
-    const person = { id, name, number }
-    persons = persons.concat(person)
-
-    response.json(person)
 })
 
 const PORT = 3001
