@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "deploy": "flyctl deploy",
+    "deploy:full": "flyctl deploy && flyctl open",
+    "logs:prod": "flyctl logs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,6 +24,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "mongoose": "^6.6.5",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
