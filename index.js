@@ -41,7 +41,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     
     Person
         .findByIdAndRemove(request.params.id)
-        .then(result => response.status(204).end())
+        .then(() => response.status(204).end())
         .catch(error => next(error))
 })
 
@@ -59,15 +59,22 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
     const { name, number } = request.body
 
-    if (number) {
+    Person
+        .exists({ name })
+        .then(result => {
+            
+            if (result) {
+                response.status(403).json({ error: "Cannot create a user that already exists" })
+            } else {
+                const person = new Person({ name, number })
 
-        const person = new Person({ name, number })
-
-        person
-            .save()
-            .then(savedPerson => response.json(savedPerson))
-            .catch(error => next(error))
-    }
+                person
+                    .save()
+                    .then(savedPerson => response.json(savedPerson))
+                    .catch(error => next(error))
+            }
+        })
+        .catch(error => next(error))
 
 })
 
