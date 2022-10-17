@@ -6,14 +6,14 @@ const app = express()
 const Person = require('./models/person')
 
 const morgan = require('morgan')
-morgan.token('body', (request, response) => JSON.stringify(request.body))
+morgan.token('body', request => JSON.stringify(request.body))
 
 const cors = require('cors')
 
 app.use(express.static('build'))
 app.use(express.json())
 app.use(cors())
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.get('/api/persons', (request, response, next) => {
     Person
@@ -38,7 +38,6 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
-    
     Person
         .findByIdAndRemove(request.params.id)
         .then(() => response.status(204).end())
@@ -62,9 +61,9 @@ app.post('/api/persons', (request, response, next) => {
     Person
         .exists({ name })
         .then(result => {
-            
+
             if (result) {
-                response.status(403).json({ error: "Cannot create a user that already exists" })
+                response.status(403).json({ error: 'Cannot create a user that already exists' })
             } else {
                 const person = new Person({ name, number })
 

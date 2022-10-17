@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "lint": "eslint .",
     "deploy": "flyctl deploy",
     "deploy:full": "flyctl deploy && flyctl open",
     "logs:prod": "flyctl logs",
@@ -29,6 +30,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^8.25.0",
     "nodemon": "^2.0.20"
   }
 }
