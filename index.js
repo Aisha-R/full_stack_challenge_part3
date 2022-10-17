@@ -75,25 +75,12 @@ app.post('/api/persons', (request, response) => {
 
     if (name && number) {
 
-        const found = persons.find(person => person.name === name)
+        const person = new Person({ name, number })
 
-        if (found) {
-            response.status(403).end({ error: "name must be unique"})
-        }
+        person.save().then(savedPerson => {
+            response.json(savedPerson)
+        })
 
-        const ids = persons.map(person => person.id)
-
-        let id = Math.floor(Math.random() * (100 - 1) + 1)
-
-        while (ids.includes(id)) {
-            id = Math.floor(Math.random() * (100 - 1) + 1)
-        }
-
-        const person = { id, name, number }
-
-        persons = persons.concat(person)
-
-        response.json(person)
     } else {
         response.status(400).end({ error: "name and/or number missing" })
     }
