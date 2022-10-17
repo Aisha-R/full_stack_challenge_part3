@@ -39,18 +39,30 @@ app.delete('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.put('/api/persons/:id', (request, response) => {
+    const { name, number } = request.body
+
+    const person = { name, number }
+
+    Person
+        .findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => response.json(updatedPerson))
+        .catch(error => next(error))
+})
+
+app.post('/api/persons', (request, response, next) => {
     const { name, number } = request.body
 
     if (name && number) {
 
         const person = new Person({ name, number })
 
-        person.save().then(savedPerson => response.json(savedPerson))
-
-    } else {
-        response.status(400).end({ error: "name and/or number missing" })
+        person
+            .save()
+            .then(savedPerson => response.json(savedPerson))
+            .catch(error => next(error))
     }
+
 })
 
 const unknownEndpoint = (request, response) => {
