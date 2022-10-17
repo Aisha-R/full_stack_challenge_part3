@@ -6,3 +6,5 @@
 fly.toml
 
 /build
+
+.env
