@@ -15,20 +15,26 @@ app.use(express.json())
 app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
     Person
         .find({})
         .then(people => response.json(people))
         .catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
     const date = new Date()
-    //response.send(`Phonebook has info for ${persons.length} people ${date}`)
+    Person
+        .countDocuments({})
+        .then(count => response.send(`Phonebook has info for ${count} people ${date}`))
+        .catch(error => next(error))
 })
 
-app.get('/api/persons/:id', (request, response) => {
-
+app.get('/api/persons/:id', (request, response, next) => {
+    Person
+        .findById(request.params.id)
+        .then(person => response.json(person))
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -39,7 +45,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
         .catch(error => next(error))
 })
 
-app.put('/api/persons/:id', (request, response) => {
+app.put('/api/persons/:id', (request, response, next) => {
     const { name, number } = request.body
 
     const person = { name, number }
